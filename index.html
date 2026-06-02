@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Projectkaart (CSV)</title>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- PapaParse (CSV reader) -->
+<script src="https://unpkg.com/papaparse@5.3.2/papaparse.min.js"></script>
+
+<script>
+  // ✅ Kaart initialiseren
+  var map = L.map('map').setView([52.1, 5.1], 8);
+
+  // ✅ Topografische kaartlaag
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 17,
+    attribution: '© OpenTopoMap'
+  }).addTo(map);
+
+  // ✅ CSV inlezen en markers toevoegen
+  Papa.parse("projecten.csv", {
+    download: true,
+    header: true,
+    skipEmptyLines: true,
+    complete: function(results) {
+
+      results.data.forEach(function(p) {
+
+        // Check of coördinaten bestaan
+        if (p.lat && p.lon) {
+
+          var lat = parseFloat(p.lat);
+          var lon = parseFloat(p.lon);
+
+          // Marker toevoegen
+          var marker = L.marker([lat, lon]).addTo(map);
+
+          // Tooltip (hover)      
+		marker.bindTooltip(
+  		`<b>${p.naam}</b><br>
+  		${p.info}<br>
+   		Type: ${p.type}<br>
+   		Status: ${p.status}`
+		);
+
+
+          // Optioneel: klik-popup
+          marker.bindPopup(
+            `<b>${p.naam || "Geen naam"}</b><br>
+             ${p.info || ""}<br>
+             <small>Lat: ${lat}, Lon: ${lon}</small>`
+          );
+        }
+
+      });
+
+    }
+  });
+</script>
+
+</body>
+</html>
