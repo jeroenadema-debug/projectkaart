@@ -59,6 +59,15 @@ Papa.parse("projecten.csv", {
 
       const marker = L.marker([lat, lon], { icon });
 
+       // Tooltip (hover)      
+		marker.bindTooltip(
+  		`<b>${p.naam}</b><br>
+  		${p.info}<br>
+   		Type: ${p.type}<br>
+   		Status: ${p.status}`
+		);
+
+
       marker.bindPopup(`
         <b>${p.naam || "Geen naam"}</b><br>
         Buurt: ${p.buurt || ""}<br>
