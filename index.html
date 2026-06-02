@@ -85,7 +85,7 @@ const customIcon = L.icon({
           // Tooltip
           marker.bindTooltip(
             `<b>${p.naam || ""}</b><br>
-             ${p.buurt || ""}<br>
+             Buurt: ${p.buurt || ""}<br>
              Type: ${p.type || ""}<br>
              Status: ${p.status || ""}`
           );
@@ -93,7 +93,7 @@ const customIcon = L.icon({
           // Popup (FIXED!)
           marker.bindPopup(
             `<b>${p.naam || "Geen naam"}</b><br>
-             ${p.buurt || ""}<br>
+             Buurt: ${p.buurt || ""}<br>
              Type: ${p.type || ""}<br>
              Status: ${p.status || ""}<br>
              <small>Lat: ${lat}, Lon: ${lon}</small>`
