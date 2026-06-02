@@ -69,7 +69,9 @@
           marker.bindPopup(
             `<b>${p.naam || "Geen naam"}</b><br>
              ${p.info || ""}<br>
-             <small>Lat: ${lat}, Lon: ${lon}</small>`
+			 Type: ${p.type}<br>
+   			 Status: ${p.status}`
+		     <small>Lat: ${lat}, Lon: ${lon}</small>`
           );
         }
 
