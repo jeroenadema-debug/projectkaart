@@ -52,6 +52,19 @@
     attribution: '© OpenTopoMap'
   }).addTo(map);
 
+
+
+// ✅ Custom marker icon (rood en groter)
+const customIcon = L.icon({
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+
+  iconSize: [40, 65],     // groter gemaakt (standaard is 25x41)
+  iconAnchor: [20, 65],   // punt van marker
+  popupAnchor: [0, -60]
+});
+
+
   // ✅ CSV laden
   Papa.parse("projecten.csv", {
     download: true,
@@ -67,7 +80,7 @@
           const lat = parseFloat(p.lat);
           const lon = parseFloat(p.lon);
 
-          const marker = L.marker([lat, lon]).addTo(map);
+          const marker = L.marker([lat, lon], { icon: customIcon }).addTo(map);
 
           // Tooltip
           marker.bindTooltip(
