@@ -82,7 +82,16 @@ Papa.parse("projecten.csv", {
       const icon = type === 'Nieuwbouw' ? iconNieuwbouw : iconRenovatie;
       const marker = L.marker([lat, lon], { icon }).addTo(map);
 
-      marker.bindPopup(`<b>${p.naam}</b><br>Type: ${type}<br>Status: ${p.status}`);
+      marker.bindPopup(`<b>${p.naam}</b><br>Buurt: ${p.buurt}<br>Type: ${p.type}<br>Status: ${p.status}`);
+
+      // Tooltip (hover)      
+		marker.bindTooltip(
+  		`<b>${p.naam}</b><br>
+  		Buurt: ${p.buurt}<br>
+   		Type: ${p.type}<br>
+   		Status: ${p.status}`
+		);
+
 
       markers.push(marker);
 
