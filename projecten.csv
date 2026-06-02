@@ -1,4 +1,4 @@
-naam,lat,lon,Buurt,type,status
+naam,lat,lon,buurt,type,status
 Project A,50.84230099576735,5.704289884473238,Heugemerveld,Renovatie,Actief
 Project B,50.864519014434755,5.70910086133485,Limmel,Nieuwbouw,Actief
 Project C,50.85976974509623,5.664172313857077,Malpertuis,Nieuwbouw,Uitvoering
