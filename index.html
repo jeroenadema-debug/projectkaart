@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
 <meta charset="UTF-8">
-<title>Projectkaart met lijst</title>
+<title>Projectkaart compleet</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <style>
 body { margin:0; font-family: Arial; }
@@ -11,6 +11,7 @@ body { margin:0; font-family: Arial; }
 #sidebar { flex:1; overflow-y:auto; padding:10px; border-left:1px solid #ccc; }
 li { padding:6px; cursor:pointer; }
 li:hover { background:#f0f0f0; }
+.active-item { background:#d0e8ff; font-weight:bold; }
 </style>
 </head>
 <body>
@@ -54,8 +55,16 @@ const highlightIcon = L.icon({
 });
 
 const markers = [];
-const markerMap = {};
 let active = null;
+
+function resetActive() {
+  document.querySelectorAll('#projectList li').forEach(el => el.classList.remove('active-item'));
+  if (active) {
+    active.marker.setIcon(
+      active.type === 'Nieuwbouw' ? iconNieuwbouw : iconRenovatie
+    );
+  }
+}
 
 Papa.parse("projecten.csv", {
   download: true,
@@ -63,43 +72,48 @@ Papa.parse("projecten.csv", {
   skipEmptyLines: true,
   complete: function(results) {
 
-    results.data.forEach(p => {
+    results.data.forEach((p, index) => {
       if (!p.lat || !p.lon) return;
 
       const lat = parseFloat(p.lat);
       const lon = parseFloat(p.lon);
       const type = (p.type || "").trim();
 
-      const icon = type === "Nieuwbouw" ? iconNieuwbouw : iconRenovatie;
-
+      const icon = type === 'Nieuwbouw' ? iconNieuwbouw : iconRenovatie;
       const marker = L.marker([lat, lon], { icon }).addTo(map);
 
       marker.bindPopup(`<b>${p.naam}</b><br>Type: ${type}<br>Status: ${p.status}`);
 
       markers.push(marker);
-      markerMap[p.naam] = { marker, type };
 
-      // lijst item
-      const li = document.createElement("li");
+      const li = document.createElement('li');
       li.textContent = p.naam;
-      
+
+      // lijst -> kaart
       li.onclick = () => {
-        // reset vorige
-        if (active) {
-          const old = active;
-          old.marker.setIcon(old.type === "Nieuwbouw" ? iconNieuwbouw : iconRenovatie);
-        }
+        resetActive();
 
-        const obj = markerMap[p.naam];
+        map.setView(marker.getLatLng(), 15);
+        marker.setIcon(highlightIcon);
+        marker.openPopup();
 
-        map.setView(obj.marker.getLatLng(), 15);
-        obj.marker.setIcon(highlightIcon);
-        obj.marker.openPopup();
-
-        active = obj;
+        li.classList.add('active-item');
+        active = { marker, type };
       };
 
-      document.getElementById("projectList").appendChild(li);
+      // kaart -> lijst
+      marker.on('click', () => {
+        resetActive();
+
+        marker.setIcon(highlightIcon);
+        li.classList.add('active-item');
+
+        li.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+        active = { marker, type };
+      });
+
+      document.getElementById('projectList').appendChild(li);
     });
 
     if (markers.length > 0) {
