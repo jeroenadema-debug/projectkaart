@@ -89,6 +89,12 @@ Papa.parse("projecten.csv", {
       "Nieuwbouw": nieuwbouwLayer,
       "Renovatie": renovatieLayer
     }).addTo(map);
+	
+	// ✅ Optioneel: zoom naar alle markers
+      if (markers.length > 0) {
+        const group = new L.featureGroup(markers);
+        map.fitBounds(group.getBounds());
+      }
   }
 });
 </script>
